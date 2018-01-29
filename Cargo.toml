@@ -1,0 +1,15 @@
+[package]
+name = "coreutils-rs"
+version = "0.1.0"
+authors = ["Zandr Martin <zandrmartin@gmail.com>"]
+
+[dependencies]
+termsize = "^0.1.5"
+
+[[bin]]
+name = "ls"
+path = "src/ls.rs"
+
+[[bin]]
+name = "tree"
+path = "src/tree.rs"

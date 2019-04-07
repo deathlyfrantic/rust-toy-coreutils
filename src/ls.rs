@@ -1,8 +1,8 @@
 extern crate termsize;
 
-use std::fs;
 use std::cmp::{max, min};
 use std::env;
+use std::fs;
 use std::os::unix::fs::PermissionsExt;
 
 // const COLOR_BLACK_BOLD: &str = "\x1b[30;1m";
@@ -55,12 +55,10 @@ fn format_entry(entry: &fs::DirEntry, prefix: &str) -> Option<FormattedEntry> {
     };
     let path = entry.path();
     let path = match path.strip_prefix(prefix) {
-        Ok(p) => {
-            match p.to_str() {
-                Some(s) => s,
-                None => return None,
-            }
-        }
+        Ok(p) => match p.to_str() {
+            Some(s) => s,
+            None => return None,
+        },
         Err(_) => return None,
     };
 
@@ -108,10 +106,9 @@ fn print_entries(entries: Vec<FormattedEntry>, config: Config) {
         Some(size) => size.cols,
         None => 80,
     };
-    let longest_entry = entries.iter().fold(
-        0,
-        |acc, e| max(acc, e.raw_output.len()),
-    );
+    let longest_entry = entries
+        .iter()
+        .fold(0, |acc, e| max(acc, e.raw_output.len()));
     let col_width = longest_entry + GUTTER_WIDTH;
     let mut line_length = 0;
 
@@ -140,9 +137,7 @@ fn print_entries(entries: Vec<FormattedEntry>, config: Config) {
             );
             let col_width = col_width as u16;
             line_length += col_width;
-            if term_width < line_length ||
-                (term_width - line_length) < col_width
-            {
+            if term_width < line_length || (term_width - line_length) < col_width {
                 println!("");
                 line_length = 0;
             }
@@ -167,8 +162,7 @@ fn main() {
         "."
     };
 
-    let mut contents: Vec<_> =
-        fs::read_dir(dir).unwrap().filter_map(|e| e.ok()).collect();
+    let mut contents: Vec<_> = fs::read_dir(dir).unwrap().filter_map(|e| e.ok()).collect();
     contents.sort_by_key(|k| k.path());
 
     let formatted_entries: Vec<_> = contents
